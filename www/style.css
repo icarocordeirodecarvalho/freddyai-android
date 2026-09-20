@@ -1,0 +1,969 @@
+/* =====================================================
+   BASE
+   ===================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+    background: #02090d;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+
+/* =====================================================
+   APLICAÇÃO
+   ===================================================== */
+
+#freddyApp {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 38%,
+            rgba(0, 220, 255, 0.13),
+            transparent 40%
+        ),
+        #02090d;
+}
+
+
+/* =====================================================
+   HEXÁGONOS
+   ===================================================== */
+
+.hexagonos-background {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    opacity: 0.55;
+}
+
+
+/* =====================================================
+   BOTÕES SUPERIORES
+   ===================================================== */
+
+.top-button {
+    position: absolute;
+
+    z-index: 30;
+
+    border: none;
+
+    background: transparent;
+
+    padding: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.top-button img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+}
+
+
+/* =====================================================
+   X
+   ===================================================== */
+
+.close-button {
+    top: 24px;
+    left: 24px;
+
+    width: 58px;
+    height: 58px;
+}
+
+
+/* =====================================================
+   CONEXÃO
+   ===================================================== */
+
+.connection-button {
+    top: 28px;
+    right: 24px;
+
+    width: 44px;
+    height: 44px;
+}
+
+
+/* =====================================================
+   FREDDY
+   ===================================================== */
+
+.freddy-stage {
+    position: absolute;
+
+    z-index: 10;
+
+    left: 50%;
+    top: 37%;
+
+    transform: translate(-50%, -50%);
+
+    width: min(72vw, 390px);
+
+    aspect-ratio: 1 / 1;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    pointer-events: none;
+}
+
+
+.freddy-avatar {
+    position: relative;
+
+    width: 88%;
+    height: 88%;
+}
+
+
+.freddy-animation {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+    user-select: none;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =====================================================
+   BOTÕES CÂMERA / CARTOLA / ANDROID
+   ===================================================== */
+
+.main-buttons {
+    position: absolute;
+
+    z-index: 30;
+
+    left: 56%;
+    bottom: 15%;
+
+    transform: translateX(-50%);
+
+    width: 55%;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0;
+}
+
+
+.main-button {
+    width: 56px;
+    height: 56px;
+
+    border: 2px solid rgba(255, 140, 0, 0.75);
+
+    border-radius: 17px;
+
+    background: rgba(30, 18, 5, 0.78);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 14px rgba(255, 140, 0, 0.25);
+
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease;
+}
+
+
+.main-button img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+}
+
+
+.main-button:active {
+    transform: scale(0.93);
+
+    box-shadow:
+        0 0 20px rgba(255, 140, 0, 0.45);
+}
+
+
+/* =====================================================
+   MICROFONE
+   ===================================================== */
+
+.microphone-button {
+    position: absolute;
+
+    z-index: 35;
+
+    left: 28px;
+    bottom: 15%;
+
+    width: 56px;
+    height: 56px;
+
+    border: 2px solid rgba(0, 238, 255, 0.6);
+
+    border-radius: 17px;
+
+    background: rgba(2, 25, 31, 0.84);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px rgba(0, 238, 255, 0.22);
+
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        border-color 0.12s ease,
+        background 0.12s ease;
+}
+
+
+.microphone-button img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+}
+
+
+.microphone-button:active {
+    transform: scale(0.93);
+}
+
+
+/* =====================================================
+   MICROFONE — OUVINDO
+   ===================================================== */
+
+.microphone-button.ouvindo {
+    border-color: #00ffff;
+
+    background: rgba(0, 80, 90, 0.9);
+
+    box-shadow:
+        0 0 12px rgba(0, 238, 255, 0.8),
+        0 0 25px rgba(0, 238, 255, 0.5);
+
+    animation:
+        pulsarMicrofone
+        1s infinite ease-in-out;
+}
+
+
+@keyframes pulsarMicrofone {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+/* =====================================================
+   CONVERSA
+   ===================================================== */
+
+.conversation-area {
+    position: absolute;
+
+    z-index: 20;
+
+    left: 5%;
+    right: 5%;
+
+    top: 58%;
+    bottom: 21%;
+
+    pointer-events: none;
+}
+
+
+.chat {
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 10px;
+
+    scrollbar-width: none;
+}
+
+
+.chat::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* =====================================================
+   MENSAGENS
+   ===================================================== */
+
+.message {
+    max-width: 82%;
+
+    padding: 10px 14px;
+
+    border-radius: 16px;
+
+    line-height: 1.4;
+
+    word-wrap: break-word;
+
+    pointer-events: auto;
+
+    flex-shrink: 0;
+}
+
+
+.user-message {
+    align-self: flex-end;
+
+    background: rgba(0, 110, 125, 0.72);
+}
+
+
+.freddy-message {
+    align-self: flex-start;
+
+    background: rgba(8, 28, 35, 0.9);
+
+    border: 1px solid rgba(0, 238, 255, 0.5);
+}
+
+
+/* =====================================================
+   CAMPO DE TEXTO
+   ===================================================== */
+
+.input-area {
+    position: absolute;
+
+    z-index: 40;
+
+    left: 4%;
+    right: 4%;
+
+    bottom: 16px;
+
+    height: 60px;
+
+    display: flex;
+
+    align-items: center;
+
+    border: 2px solid rgba(0, 238, 255, 0.5);
+
+    border-radius: 30px;
+
+    background: rgba(3, 24, 30, 0.9);
+
+    box-shadow:
+        0 0 16px rgba(0, 238, 255, 0.12);
+}
+
+
+#messageInput {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100%;
+
+    padding: 0 18px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 16px;
+}
+
+
+#messageInput::placeholder {
+    color: rgba(170, 210, 215, 0.65);
+}
+
+
+/* =====================================================
+   ENVIAR
+   ===================================================== */
+
+#sendButton {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    background: transparent;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px;
+
+    cursor: pointer;
+}
+
+
+#sendButton img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+}
+
+
+#sendButton:active {
+    transform: scale(0.9);
+}
+
+
+/* =====================================================
+   MENU DE IMAGEM
+   ===================================================== */
+
+.image-menu {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(0, 5, 8, 0.72);
+
+    backdrop-filter:
+        blur(8px);
+
+    -webkit-backdrop-filter:
+        blur(8px);
+}
+
+
+/* =====================================================
+   CAIXA DO MENU
+   ===================================================== */
+
+.image-menu-box {
+    width: min(90%, 380px);
+
+    padding: 22px;
+
+    border: 2px solid rgba(0, 238, 255, 0.55);
+
+    border-radius: 22px;
+
+    background:
+        rgba(3, 24, 30, 0.96);
+
+    box-shadow:
+        0 0 25px rgba(0, 238, 255, 0.18),
+        inset 0 0 25px rgba(0, 238, 255, 0.04);
+}
+
+
+/* =====================================================
+   TÍTULO
+   ===================================================== */
+
+.image-menu-title {
+    text-align: center;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    margin-bottom: 18px;
+}
+
+
+/* =====================================================
+   OPÇÕES
+   ===================================================== */
+
+.image-menu-options {
+    display: flex;
+
+    gap: 14px;
+
+    justify-content: center;
+}
+
+
+.image-option {
+    flex: 1;
+
+    min-height: 125px;
+
+    border: 2px solid rgba(255, 140, 0, 0.7);
+
+    border-radius: 18px;
+
+    background:
+        rgba(30, 18, 5, 0.8);
+
+    color: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 14px rgba(255, 140, 0, 0.16);
+
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        border-color 0.12s ease;
+}
+
+
+.image-option:hover {
+    border-color: #ff9800;
+
+    box-shadow:
+        0 0 20px rgba(255, 140, 0, 0.35);
+}
+
+
+.image-option:active {
+    transform: scale(0.95);
+}
+
+
+.image-option-icon {
+    font-size: 38px;
+
+    line-height: 1;
+}
+
+
+/* =====================================================
+   CANCELAR
+   ===================================================== */
+
+.image-menu-close {
+    width: 100%;
+
+    margin-top: 16px;
+
+    height: 44px;
+
+    border: 1px solid rgba(0, 238, 255, 0.4);
+
+    border-radius: 14px;
+
+    background:
+        rgba(2, 20, 25, 0.8);
+
+    color:
+        rgba(200, 240, 245, 0.85);
+
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+
+.image-menu-close:active {
+    transform: scale(0.97);
+}
+
+
+/* =====================================================
+   DESABILITADO
+   ===================================================== */
+
+button:disabled {
+    opacity: 0.5;
+
+    cursor: default;
+}
+
+
+/* =====================================================
+   TELAS PEQUENAS
+   ===================================================== */
+
+@media (max-width: 500px) {
+
+    .close-button {
+        top: 20px;
+        left: 20px;
+
+        width: 52px;
+        height: 52px;
+    }
+
+
+    .connection-button {
+        top: 24px;
+        right: 20px;
+
+        width: 40px;
+        height: 40px;
+    }
+
+
+    .freddy-stage {
+        top: 36%;
+
+        width: min(76vw, 360px);
+    }
+
+
+    .freddy-avatar {
+        width: 88%;
+        height: 88%;
+    }
+
+
+    .conversation-area {
+        left: 4%;
+        right: 4%;
+
+        top: 58%;
+        bottom: 21%;
+    }
+
+
+    .message {
+        max-width: 88%;
+
+        padding: 9px 13px;
+    }
+
+
+    /* =================================================
+       BOTÕES LARANJA
+       ================================================= */
+
+    .main-buttons {
+        position: absolute;
+
+        left: 56%;
+        bottom: 15%;
+
+        transform: translateX(-50%);
+
+        width: 55%;
+
+        display: flex;
+
+        flex-direction: row;
+
+        align-items: center;
+        justify-content: space-between;
+    }
+
+
+    .main-button {
+        width: 56px;
+        height: 56px;
+
+        border-radius: 17px;
+
+        padding: 9px;
+    }
+
+
+    .microphone-button {
+        left: 28px;
+        bottom: 15%;
+
+        width: 56px;
+        height: 56px;
+
+        padding: 10px;
+    }
+
+
+    .input-area {
+        left: 3%;
+        right: 3%;
+
+        height: 58px;
+
+        bottom: 13px;
+    }
+
+
+    #messageInput {
+        font-size: 16px;
+
+        padding-left: 16px;
+    }
+
+
+    #sendButton {
+        width: 56px;
+        height: 56px;
+    }
+
+
+    /* =================================================
+       MENU DE IMAGEM
+       ================================================= */
+
+    .image-menu-box {
+        width: 88%;
+
+        padding: 18px;
+    }
+
+
+    .image-menu-title {
+        font-size: 17px;
+
+        margin-bottom: 15px;
+    }
+
+
+    .image-menu-options {
+        gap: 10px;
+    }
+
+
+    .image-option {
+        min-height: 115px;
+
+        border-radius: 16px;
+
+        font-size: 15px;
+    }
+
+
+    .image-option-icon {
+        font-size: 34px;
+    }
+}
+/*
+==========================================
+MENU DE VISÃO
+==========================================
+*/
+
+.vision-menu {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 1000;
+}
+
+
+.vision-menu.hidden {
+    display: none;
+}
+
+
+.vision-menu-box {
+    width: min(88vw, 360px);
+
+    padding: 24px;
+
+    border: 2px solid rgba(0, 255, 255, 0.75);
+    border-radius: 20px;
+
+    background: rgba(8, 15, 25, 0.96);
+
+    box-shadow:
+        0 0 15px rgba(0, 255, 255, 0.35),
+        0 0 40px rgba(0, 255, 255, 0.15);
+
+    text-align: center;
+}
+
+
+.vision-menu-title {
+    margin-bottom: 20px;
+
+    color: #ff7f00;
+
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.vision-menu-options {
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+.vision-option {
+    width: 100%;
+
+    padding: 16px;
+
+    border: 1px solid rgba(0, 255, 255, 0.6);
+    border-radius: 12px;
+
+    background: rgba(0, 255, 255, 0.08);
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        box-shadow 0.2s,
+        transform 0.2s;
+}
+
+
+.vision-option:hover {
+    background: rgba(0, 255, 255, 0.18);
+
+    box-shadow:
+        0 0 15px rgba(0, 255, 255, 0.35);
+
+    transform: scale(1.02);
+}
+
+
+.vision-menu-close {
+    margin-top: 18px;
+
+    padding: 10px 24px;
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: rgba(255, 255, 255, 0.75);
+
+    cursor: pointer;
+}

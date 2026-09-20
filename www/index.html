@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>FreddyAI</title>
+
+    <link
+        rel="stylesheet"
+        href="./style.css"
+    >
+</head>
+
+<body>
+
+    <main id="freddyApp">
+
+        <!-- HEXÁGONOS -->
+
+        <img
+            id="hexagonosBackground"
+            class="hexagonos-background"
+            src="./icons/hexagonos.png"
+            alt=""
+        >
+
+
+        <!-- CONTROLES SUPERIORES -->
+
+        <button
+            id="closeButton"
+            class="top-button close-button"
+            type="button"
+            aria-label="Fechar"
+        >
+            <img
+                src="./icons/sair.png"
+                alt="Fechar"
+            >
+        </button>
+
+
+        <button
+            id="connectionButton"
+            class="top-button connection-button"
+            type="button"
+            aria-label="Conexão"
+        >
+            <img
+                src="./icons/online.png"
+                alt="Conexão"
+            >
+        </button>
+
+
+        <!-- FREDDY -->
+
+        <section
+            id="freddyStage"
+            class="freddy-stage"
+        >
+
+            <div
+                id="freddyAvatar"
+                class="freddy-avatar"
+            >
+
+                <img
+                    id="freddyIdle"
+                    class="freddy-animation"
+                    src=""
+                    alt="Freddy"
+                >
+
+                <img
+                    id="freddySpeaking"
+                    class="freddy-animation hidden"
+                    src=""
+                    alt="Freddy falando"
+                >
+
+            </div>
+
+        </section>
+
+
+        <!-- BOTÕES PRINCIPAIS -->
+
+<section
+    id="mainButtons"
+    class="main-buttons"
+>
+
+    <button
+        id="cameraButton"
+        class="main-button"
+        type="button"
+        aria-label="Câmera"
+    >
+        <img
+            src="./icons/camera.png"
+            alt="Câmera"
+        >
+    </button>
+
+
+    <button
+        id="hatButton"
+        class="main-button"
+        type="button"
+        aria-label="Minimizar"
+    >
+        <img
+            src="./icons/cartola.png"
+            alt="Minimizar"
+        >
+    </button>
+
+
+    <button
+        id="androidButton"
+        class="main-button"
+        type="button"
+        aria-label="Android"
+    >
+        <img
+            src="./icons/android.png"
+            alt="Android"
+        >
+    </button>
+
+</section>
+
+
+<!-- MENU DE VISÃO -->
+
+<div
+    id="visionMenu"
+    class="vision-menu hidden"
+>
+
+    <div class="vision-menu-box">
+
+        <div class="vision-menu-title">
+            Visão do Freddy
+        </div>
+
+        <div class="vision-menu-options">
+
+            <button
+                id="visionUpdateButton"
+                class="vision-option"
+                type="button"
+            >
+                Visão por atualização
+            </button>
+
+            <button
+                id="visionContinuousButton"
+                class="vision-option"
+                type="button"
+            >
+                Visão contínua
+            </button>
+
+        </div>
+
+        <button
+            id="closeVisionMenu"
+            class="vision-menu-close"
+            type="button"
+        >
+            Cancelar
+        </button>
+
+    </div>
+
+</div>
+
+        <!-- MICROFONE -->
+
+        <button
+            id="microphoneButton"
+            class="microphone-button"
+            type="button"
+            aria-label="Microfone"
+        >
+            <img
+                src="./icons/microfone.png"
+                alt="Microfone"
+            >
+        </button>
+
+
+        <!-- CONVERSA -->
+
+        <section
+            id="conversationArea"
+            class="conversation-area"
+        >
+
+            <div
+                id="chat"
+                class="chat"
+            ></div>
+
+        </section>
+
+
+        <!-- ENTRADA DE TEXTO -->
+
+        <form
+            id="inputArea"
+            class="input-area"
+        >
+
+            <input
+                id="messageInput"
+                type="text"
+                placeholder="Fale com o Freddy..."
+                autocomplete="off"
+            >
+
+            <button
+                id="sendButton"
+                type="submit"
+                aria-label="Enviar"
+            >
+                <img
+                    src="./icons/enviar.png"
+                    alt="Enviar"
+                >
+            </button>
+
+        </form>
+
+
+        <!--
+        =========================================
+        ENTRADAS DE IMAGEM
+        =========================================
+        -->
+
+        <!-- Câmera -->
+        <input
+            id="cameraInput"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            hidden
+        >
+
+        <!-- Galeria -->
+        <input
+            id="galleryInput"
+            type="file"
+            accept="image/*"
+            hidden
+        >
+
+
+        <!--
+        =========================================
+        MENU DE IMAGEM
+        =========================================
+        -->
+
+        <div
+            id="imageMenu"
+            class="image-menu hidden"
+        >
+
+            <div class="image-menu-box">
+
+                <div class="image-menu-title">
+                    Escolha uma opção
+                </div>
+
+
+                <div class="image-menu-options">
+
+                    <button
+                        id="openCameraButton"
+                        class="image-option"
+                        type="button"
+                    >
+
+                        <span class="image-option-icon">
+                            📷
+                        </span>
+
+                        <span>
+                            Câmera
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        id="openGalleryButton"
+                        class="image-option"
+                        type="button"
+                    >
+
+                        <span class="image-option-icon">
+                            🖼️
+                        </span>
+
+                        <span>
+                            Galeria
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <button
+                    id="closeImageMenu"
+                    class="image-menu-close"
+                    type="button"
+                >
+                    Cancelar
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script
+        type="module"
+        src="./script.js"
+    ></script>
+
+</body>
+
+</html>
