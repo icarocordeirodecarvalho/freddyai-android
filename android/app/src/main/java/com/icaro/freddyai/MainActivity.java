@@ -2,7 +2,10 @@ package com.icaro.freddyai;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.webkit.PermissionRequest;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebChromeClient;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -18,11 +21,46 @@ public class MainActivity extends BridgeActivity {
         super.onStart();
 
         if (getBridge() != null && getBridge().getWebView() != null) {
-            WebSettings settings = getBridge().getWebView().getSettings();
+
+            WebView webView = getBridge().getWebView();
+
+            WebSettings settings = webView.getSettings();
 
             settings.setMixedContentMode(
                 WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             );
+
+            webView.setWebChromeClient(new WebChromeClient() {
+
+                @Override
+                public void onPermissionRequest(
+                    PermissionRequest request
+                ) {
+
+                    runOnUiThread(() -> {
+
+                        if (ContextCompat.checkSelfPermission(
+                                MainActivity.this,
+                                Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                        &&
+                        ContextCompat.checkSelfPermission(
+                                MainActivity.this,
+                                Manifest.permission.RECORD_AUDIO
+                        ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+
+                            request.grant(
+                                request.getResources()
+                            );
+
+                        } else {
+
+                            solicitarPermissoes();
+                        }
+                    });
+                }
+            });
         }
 
         solicitarPermissoes();
