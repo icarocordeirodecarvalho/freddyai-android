@@ -2,7 +2,6 @@ package com.icaro.freddyai;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.webkit.WebSettings;
 
 import androidx.core.app.ActivityCompat;
@@ -12,7 +11,7 @@ import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
 
-    private static final int CAMERA_PERMISSION_CODE = 100;
+    private static final int PERMISSION_CODE = 100;
 
     @Override
     public void onStart() {
@@ -26,20 +25,32 @@ public class MainActivity extends BridgeActivity {
             );
         }
 
-        solicitarPermissaoCamera();
+        solicitarPermissoes();
     }
 
-    private void solicitarPermissaoCamera() {
+    private void solicitarPermissoes() {
 
-        if (ContextCompat.checkSelfPermission(
+        boolean cameraNegada =
+            ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
-        ) != PackageManager.PERMISSION_GRANTED) {
+            ) != PackageManager.PERMISSION_GRANTED;
+
+        boolean microfoneNegado =
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED;
+
+        if (cameraNegada || microfoneNegado) {
 
             ActivityCompat.requestPermissions(
                 this,
-                new String[]{Manifest.permission.CAMERA},
-                CAMERA_PERMISSION_CODE
+                new String[] {
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+                },
+                PERMISSION_CODE
             );
         }
     }
