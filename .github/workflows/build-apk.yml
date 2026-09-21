@@ -1,0 +1,33 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Permitir execução do Gradle
+        run: chmod +x android/gradlew
+
+      - name: Compilar APK
+        run: cd android && ./gradlew assembleDebug
+
+      - name: Disponibilizar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: freddyai-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
