@@ -322,7 +322,123 @@ SISTEMA DE CÂMERA / GALERIA
 ==========================================
 */
 
-function adicionarImagemNaConversa(
+
+async function otimizarImagemParaFreddy(arquivo) {
+    const LIMITE_DIMENSAO = 1280;
+    const TAMANHO_ALVO = 700 * 1024;
+    const QUALIDADE_INICIAL = 0.85;
+    const QUALIDADE_MINIMA = 0.65;
+    const PASSO_QUALIDADE = 0.05;
+
+    const imagem = await new Promise((resolve, reject) => {
+        const elemento = new Image();
+        const url = URL.createObjectURL(arquivo);
+
+        elemento.onload = function() {
+            URL.revokeObjectURL(url);
+            resolve(elemento);
+        };
+
+        elemento.onerror = function() {
+            URL.revokeObjectURL(url);
+            reject(new Error("Não foi possível carregar a imagem."));
+        };
+
+        elemento.src = url;
+    });
+
+    let largura = imagem.naturalWidth;
+    let altura = imagem.naturalHeight;
+
+    if (
+        largura > LIMITE_DIMENSAO ||
+        altura > LIMITE_DIMENSAO
+    ) {
+        const escala = Math.min(
+            LIMITE_DIMENSAO / largura,
+            LIMITE_DIMENSAO / altura
+        );
+
+        largura = Math.round(largura * escala);
+        altura = Math.round(altura * escala);
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = largura;
+    canvas.height = altura;
+
+    const contexto = canvas.getContext("2d");
+
+    contexto.drawImage(
+        imagem,
+        0,
+        0,
+        largura,
+        altura
+    );
+
+    for (
+        let qualidade = QUALIDADE_INICIAL;
+        qualidade >= QUALIDADE_MINIMA;
+        qualidade -= PASSO_QUALIDADE
+    ) {
+        const blob = await new Promise(resolve => {
+            canvas.toBlob(
+                resolve,
+                "image/jpeg",
+                qualidade
+            );
+        });
+
+        if (!blob) {
+            throw new Error("Não foi possível comprimir a imagem.");
+        }
+
+        console.log(
+            "FreddyAI: qualidade",
+            qualidade.toFixed(2),
+            "→",
+            Math.round(blob.size / 1024),
+            "KB"
+        );
+
+        if (blob.size <= TAMANHO_ALVO) {
+            return await blobParaBase64(blob);
+        }
+    }
+
+    const blobFinal = await new Promise(resolve => {
+        canvas.toBlob(
+            resolve,
+            "image/jpeg",
+            QUALIDADE_MINIMA
+        );
+    });
+
+    if (!blobFinal) {
+        throw new Error("Não foi possível gerar a imagem final.");
+    }
+
+    return await blobParaBase64(blobFinal);
+}
+
+function blobParaBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const leitor = new FileReader();
+
+        leitor.onload = function() {
+            resolve(leitor.result);
+        };
+
+        leitor.onerror = function() {
+            reject(new Error("Não foi possível converter a imagem."));
+        };
+
+        leitor.readAsDataURL(blob);
+    });
+}
+
+async function adicionarImagemNaConversa(
     arquivo
 ) {
 
@@ -343,33 +459,22 @@ function adicionarImagemNaConversa(
 
         return;
     }
-const leitor =
-    new FileReader();
-
-leitor.onload = function() {
-
+try {
     imagemPendente =
-        leitor.result;
+        await otimizarImagemParaFreddy(arquivo);
 
     console.log(
-        "FreddyAI: imagem preparada para análise."
+        "FreddyAI: imagem otimizada para análise."
     );
-};
-
-leitor.onerror = function(erro) {
-
+} catch (erro) {
     console.error(
-        "FreddyAI: erro ao preparar imagem:",
+        "FreddyAI: erro ao otimizar imagem:",
         erro
     );
 
     imagemPendente =
         null;
-};
-
-leitor.readAsDataURL(
-    arquivo
-);
+}
 
 
     const imagemUrl =
