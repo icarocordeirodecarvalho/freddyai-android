@@ -2,6 +2,7 @@ package com.icaro.freddyai;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -23,6 +24,7 @@ public class MainActivity extends BridgeActivity {
     private static final int FILE_CHOOSER_CODE = 200;
 
     private ValueCallback<Uri[]> filePathCallback;
+    private Uri cameraImageUri;
 
     @Override
     public void onStart() {
@@ -83,18 +85,92 @@ public class MainActivity extends BridgeActivity {
 
                     filePathCallback = callback;
 
-                    Intent intent =
+                    /*
+                    ==========================================
+                    CÂMERA
+                    ==========================================
+                    */
+
+                    if (params.isCaptureEnabled()) {
+
+                        if (
+                            ContextCompat.checkSelfPermission(
+                                MainActivity.this,
+                                Manifest.permission.CAMERA
+                            ) != PackageManager.PERMISSION_GRANTED
+                        ) {
+
+                            solicitarPermissoes();
+                            filePathCallback = null;
+
+                            return true;
+                        }
+
+                        ContentValues valores =
+                            new ContentValues();
+
+                        valores.put(
+                            MediaStore.Images.Media.DISPLAY_NAME,
+                            "FreddyAI_" +
+                            System.currentTimeMillis() +
+                            ".jpg"
+                        );
+
+                        valores.put(
+                            MediaStore.Images.Media.MIME_TYPE,
+                            "image/jpeg"
+                        );
+
+                        cameraImageUri =
+                            getContentResolver().insert(
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                valores
+                            );
+
+                        if (cameraImageUri == null) {
+
+                            filePathCallback.onReceiveValue(null);
+                            filePathCallback = null;
+
+                            return true;
+                        }
+
+                        Intent cameraIntent =
+                            new Intent(
+                                MediaStore.ACTION_IMAGE_CAPTURE
+                            );
+
+                        cameraIntent.putExtra(
+                            MediaStore.EXTRA_OUTPUT,
+                            cameraImageUri
+                        );
+
+                        startActivityForResult(
+                            cameraIntent,
+                            FILE_CHOOSER_CODE
+                        );
+
+                        return true;
+                    }
+
+                    /*
+                    ==========================================
+                    GALERIA
+                    ==========================================
+                    */
+
+                    Intent galeriaIntent =
                         new Intent(Intent.ACTION_GET_CONTENT);
 
-                    intent.addCategory(
+                    galeriaIntent.addCategory(
                         Intent.CATEGORY_OPENABLE
                     );
 
-                    intent.setType("image/*");
+                    galeriaIntent.setType("image/*");
 
                     startActivityForResult(
                         Intent.createChooser(
-                            intent,
+                            galeriaIntent,
                             "Selecionar imagem"
                         ),
                         FILE_CHOOSER_CODE
@@ -148,30 +224,63 @@ public class MainActivity extends BridgeActivity {
             data
         );
 
-        if (requestCode == FILE_CHOOSER_CODE) {
+        if (requestCode != FILE_CHOOSER_CODE) {
+            return;
+        }
 
-            if (filePathCallback == null) {
-                return;
-            }
+        if (filePathCallback == null) {
+            return;
+        }
 
-            Uri[] resultados = null;
+        Uri[] resultados = null;
 
-            if (
-                resultCode == Activity.RESULT_OK &&
-                data != null &&
-                data.getData() != null
-            ) {
+        /*
+        ==========================================
+        FOTO TIRADA PELA CÂMERA
+        ==========================================
+        */
+
+        if (cameraImageUri != null) {
+
+            if (resultCode == Activity.RESULT_OK) {
 
                 resultados = new Uri[] {
-                    data.getData()
+                    cameraImageUri
                 };
+
+            } else {
+
+                getContentResolver().delete(
+                    cameraImageUri,
+                    null,
+                    null
+                );
             }
 
-            filePathCallback.onReceiveValue(
-                resultados
-            );
-
-            filePathCallback = null;
+            cameraImageUri = null;
         }
+
+        /*
+        ==========================================
+        IMAGEM ESCOLHIDA NA GALERIA
+        ==========================================
+        */
+
+        else if (
+            resultCode == Activity.RESULT_OK &&
+            data != null &&
+            data.getData() != null
+        ) {
+
+            resultados = new Uri[] {
+                data.getData()
+            };
+        }
+
+        filePathCallback.onReceiveValue(
+            resultados
+        );
+
+        filePathCallback = null;
     }
 }
